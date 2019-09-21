@@ -1,14 +1,38 @@
-<ion-header>
-  <ion-navbar>
-    <ion-title>
-      Ionic Blank
-    </ion-title>
-  </ion-navbar>
-</ion-header>
+<ion-content class="theme-background" padding> 
+  <ion-img src="assets/imgs/settings.svg" class="logo" ></ion-img>
+  <div class="mt-3 d-flex justify-content-between">
+    <div>
+        <span class="text-grey">Welcome to</span>
+        <h2 class="font-weight-normal" style="transform: translateY(-12px)">Dashboard</h2>
+    </div>
+    <div class="d-flex" style="margin-top: 12px">
+      <span class="day">15</span>
+      <span class="text-uppercase text-grey month">Aug<br>2019</span>
+    </div>
+  </div>
 
-<ion-content padding>
-  The world is your oyster.
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
-  </p>
+  <div class="d-flex justify-content-between" style="margin-top: 5vh">
+    <div (click)="loadEmployees()" class="square"> 
+      <div class="d-flex flex-column justify-content-center" style="height: 18vh">
+        <div class="text-center">
+            <p style="font-size: 28px">1941</p>
+            <p class="text-grey text-uppercase" style="font-size: 9px">Total employees</p>
+        </div>
+      </div>
+    </div>
+    <div (click)="loadEmployees()" class="square"> 
+        <div class="d-flex flex-column justify-content-center" style="height: 18vh">
+          <div class="text-center">
+              <p style="font-size: 28px">500</p>
+              <p class="text-grey text-uppercase" style="font-size: 9px">Present employees</p>
+          </div>
+        </div>
+      </div>
+  </div>
+
+  <div class="align-bottom">
+    <button (click)="incomingAttendance()" class="button">Take incoming attendance</button><br />
+    <button (click)="outgoingAttendance()" class="button">Take outgoing attendance</button>
+  </div>
+
 </ion-content>

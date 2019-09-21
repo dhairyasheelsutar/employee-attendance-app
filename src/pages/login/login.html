@@ -1,0 +1,16 @@
+<ion-content class="theme-background" padding>
+  <form #form="ngForm" (ngSubmit)="onSubmit(form)" class="d-flex flex-column justify-content-center" style="height: 80vh">
+      <h1 class="text-center text-uppercase" style="letter-spacing: 1.4px">Login</h1>
+      <ion-item class="theme-background" no-padding>
+          <ion-label class="text-grey" floating>Username</ion-label>
+          <ion-input [(ngModel)]="username" name="username" ></ion-input>
+        </ion-item>
+        <ion-item class="theme-background" no-padding>
+          <ion-label class="text-grey" floating>Password</ion-label>
+          <ion-input [(ngModel)]="password" name="password" ></ion-input>
+        </ion-item>
+        <div class="mt-3">
+          <button class="button">Login</button>
+        </div>
+  </form>
+</ion-content>

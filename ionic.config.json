@@ -1,5 +1,7 @@
 {
   "name": "attendance",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "ionic-angular"
 }

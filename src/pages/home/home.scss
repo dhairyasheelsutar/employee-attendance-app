@@ -1,3 +1,39 @@
 page-home {
 
+    .logo{
+        background: #000;
+        float: right;
+        clear: both;
+    }
+
+    
+
+    p{
+        line-height: 0
+    }
+
+    .day{
+        font-size: 33px;
+        font-weight: 600;
+    }
+
+    .month{
+        margin-top: 3px;
+        margin-left: 5px;
+    }
+
+    .square{
+        display: block;
+        border-radius: 20px;
+        background: #1b1b1b;
+        height: 20vh;
+        width: 43vw;
+    }
+
+    .align-bottom{
+        vertical-align: bottom;
+        position: absolute;
+        bottom: 3vh;
+    }
+
 }

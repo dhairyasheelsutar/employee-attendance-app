@@ -14,3 +14,61 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+
+*{
+    font-family: 'Roboto', sans-serif;
+    letter-spacing: 1px;
+}
+
+.theme-background{
+    background: #000;
+    color: #e2e2e2;
+}
+
+.text-grey{
+    color: #909090
+}
+
+.font-weight-normal{
+    font-weight: 100
+}
+
+.d-flex{
+    display: flex;
+}
+
+.flex-column{
+    flex-direction: column
+}
+
+.justify-content-between{
+    justify-content: space-between
+}
+
+.justify-content-center{
+    justify-content: center;
+}
+
+.text-uppercase{
+    text-transform: uppercase
+}
+
+.text-center{
+    text-align: center;
+}
+
+.mt-3{
+    margin-top: 10vh
+}
+
+.button{
+    display: block;
+    font-size: 15px;
+    background-color: #0900FF;
+    color: #fff;
+    border-radius: 20px;
+    width: 91.5vw;
+    padding-top: 18px;
+    padding-bottom: 18px;
+    font-weight: 100;
+}

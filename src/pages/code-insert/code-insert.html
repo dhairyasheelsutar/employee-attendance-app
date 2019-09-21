@@ -1,0 +1,13 @@
+<ion-content class="theme-background" padding>
+  <div class="d-flex flex-column justify-content-center" style="height: 80vh">
+    <form #form="ngForm" (ngSubmit)="onSubmit(form)">
+      <ion-item class="theme-background" no-padding>
+        <ion-label floating>Enter code</ion-label>
+        <ion-input name="code" [(ngModel)]="code"></ion-input>
+      </ion-item>
+      <div class="mt-3">
+        <button class="button">Verify</button>
+      </div>
+    </form>
+  </div>
+</ion-content>
