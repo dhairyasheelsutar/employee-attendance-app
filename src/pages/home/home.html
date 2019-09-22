@@ -6,24 +6,24 @@
         <h2 class="font-weight-normal" style="transform: translateY(-12px)">Dashboard</h2>
     </div>
     <div class="d-flex" style="margin-top: 12px">
-      <span class="day">15</span>
-      <span class="text-uppercase text-grey month">Aug<br>2019</span>
+      <span class="day">{{ day }}</span>
+      <span class="text-uppercase text-grey month">{{ month }}<br>{{ year }}</span>
     </div>
   </div>
 
   <div class="d-flex justify-content-between" style="margin-top: 5vh">
-    <div (click)="loadEmployees()" class="square"> 
+    <div (click)="loadEmployees(1)" class="square">
       <div class="d-flex flex-column justify-content-center" style="height: 18vh">
         <div class="text-center">
-            <p style="font-size: 28px">1941</p>
+            <p style="font-size: 28px">{{ totalEmployeesCount }}</p>
             <p class="text-grey text-uppercase" style="font-size: 9px">Total employees</p>
         </div>
       </div>
     </div>
-    <div (click)="loadEmployees()" class="square"> 
+    <div (click)="loadEmployees(2)" class="square">
         <div class="d-flex flex-column justify-content-center" style="height: 18vh">
           <div class="text-center">
-              <p style="font-size: 28px">500</p>
+              <p style="font-size: 28px">{{ presentEmployeesCount }}</p>
               <p class="text-grey text-uppercase" style="font-size: 9px">Present employees</p>
           </div>
         </div>

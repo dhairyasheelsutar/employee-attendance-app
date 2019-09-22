@@ -1,24 +1,24 @@
 import { Component } from '@angular/core';
-import { Platform } from 'ionic-angular';
+import { Platform, App } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { LoginPage } from '../pages/login/login';
-import { HomePage } from '../pages/home/home';
-import { EmployeePage } from '../pages/employee/employee';
-import { CodeInsertPage } from '../pages/code-insert/code-insert';
 import { AndroidPermissions } from '@ionic-native/android-permissions';
+import { StorageService } from "../services/storage.service";
+import { HomePage } from '../pages/home/home';
 
 @Component({
   templateUrl: 'app.html',
-  providers: [AndroidPermissions]
+  providers: [AndroidPermissions, StorageService]
 })
 export class MyApp {
-  rootPage:any = LoginPage;
 
   constructor(platform: Platform, 
               statusBar: StatusBar, 
               splashScreen: SplashScreen,
-              permissions: AndroidPermissions) {
+              permissions: AndroidPermissions,
+              public store: StorageService,
+              public app: App) {
     platform.ready().then(() => {
       statusBar.styleDefault();
       splashScreen.hide();
@@ -29,6 +29,16 @@ export class MyApp {
         permissions.PERMISSION.INTERNET,
         permissions.PERMISSION.CAMERA
       ]);
+
+      this.store.get("token").then((data) => {
+            if(data !== null){
+                this.app.getActiveNav().setRoot(HomePage);
+            }else{
+                this.app.getActiveNav().setRoot(LoginPage);
+            }
+      }).catch(() => {
+          this.app.getActiveNav().setRoot(LoginPage);
+      });
 
     });
   }

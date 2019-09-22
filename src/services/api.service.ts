@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 @Injectable()
 export class ApiService{
 
-    private API_KEY: string = "http://localhost:5000/";
+    private API_KEY: string = "http://192.168.43.248:4000/";
     constructor(private http: Http){
 
     }
@@ -14,13 +14,13 @@ export class ApiService{
     get(route: string){
         return this.http.get(this.API_KEY + route)
         .map((response: Response) => response.json())
-        .catch((error: Response) => error.json());
+        .catch((error: Response) => Observable.throw(error.json()));
     }
 
     post(route: string, data: any){
         return this.http.post(this.API_KEY + route, data)
         .map((response: Response) => response.json())
-        .catch((error: Response) => error.json());
+        .catch((error: Response) => Observable.throw(error.json()));
     }
 
 

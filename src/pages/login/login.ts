@@ -33,13 +33,10 @@ export class LoginPage {
 
   onSubmit(form: NgForm){
 
-
-    this.navCtrl.push(HomePage);
-    /*
     if(this.username !== undefined && this.password !== undefined && this.username !==  "" && this.password !== ""){
 
       let obj = {
-        username: this.username,
+        email: this.username,
         password: this.password
       };
 
@@ -48,8 +45,10 @@ export class LoginPage {
       let loader = this.loading.create({content: "Logging in..."});
       loader.present();
 
-      this.api.post("login.php", obj).subscribe((data) => {
-        if(data.status === 400){
+      this.api.post("ionic/auth", obj).subscribe((data) => {
+
+
+        if(data.token === undefined){
           loader.dismiss();
           this.alert.create({
             subTitle: "Invalid login credentials",
@@ -64,14 +63,15 @@ export class LoginPage {
             ]
           }).present();
         }else{
-
-          this.store.set("data", data).then((success) => {
+            loader.dismiss();
+          this.store.set("token", data.token).then((success) => {
             this.navCtrl.push(HomePage);
           }, (error) => {
             console.log(error);
           });
         }
       }, (error) => {
+          loader.dismiss();
         console.log(error);
         this.alert.create({
           subTitle: "Invalid login credentials",
@@ -96,7 +96,7 @@ export class LoginPage {
         ]
       }).present();
 
-    }*/
+    }
   }
 
 }
