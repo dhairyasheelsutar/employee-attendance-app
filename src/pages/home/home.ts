@@ -6,11 +6,14 @@ import { forkJoin } from "rxjs/observable/forkJoin";
 import { ApiService } from "../../services/api.service";
 import { LoginPage } from "../login/login";
 import { StorageService } from "../../services/storage.service";
+import { AlertController } from "ionic-angular";
+import { ErrorPage } from "../error/error";
+import { AlertService } from "../../services/alert.service";
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html',
-    providers: [ApiService, StorageService]
+    providers: [ApiService, StorageService, AlertService]
 })
 export class HomePage {
 
@@ -24,7 +27,11 @@ export class HomePage {
   presentEmployees = [];
 
 
-  constructor(public navCtrl: NavController, public api: ApiService, public store: StorageService) {
+  constructor(public navCtrl: NavController,
+              public api: ApiService,
+              public store: StorageService,
+              public alert: AlertController,
+              public alertService: AlertService) {
     let date = new Date();
     this.day = date.getDate();
     this.year = date.getFullYear();
@@ -59,7 +66,7 @@ export class HomePage {
 
   ionViewCanEnter(){
 
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
 
           this.store.get("token").then((data) => {
 
@@ -68,19 +75,30 @@ export class HomePage {
               };
 
               forkJoin([
-                  this.api.post("ionic/totalEmployees", obj),
-                  this.api.post("ionic/allemployees", obj)
-              ]).subscribe(([data1, data2]) => {
+                  this.api.post("ionic/", obj),
+                  this.api.post("ionic/allemployees", obj),
+                  this.api.post("ionic/allPresentEmployees", obj)
+              ]).subscribe(([data1, data2, data3]) => {
                   resolve(true);
-                  this.totalEmployeesCount = data1;
+                  this.totalEmployeesCount = data1["totalEmployees"];
+                  this.presentEmployeesCount = data1["allPresentEmployees"];
                   this.totalEmployees = data2;
-                  console.log(this.totalEmployees);
-                  console.log(data1);
-              }, () => {
-                  this.store.clear().then(() => {
-                      this.navCtrl.setRoot(LoginPage);
-                      resolve(true);
-                  });
+                  this.presentEmployees = data3;
+              }, (error) => {
+
+                  if(error.status === 401){
+                      this.store.clear().then(() => {
+                          this.navCtrl.setRoot(LoginPage);
+                          resolve(true);
+                      });
+                  }else{
+                      this.alertService.show("Page not found", () => {
+                          console.log("ok");
+                          resolve(true);
+                          this.navCtrl.setRoot(ErrorPage);
+                      });
+
+                  }
               });
 
 

@@ -47,6 +47,7 @@ export class LoginPage {
 
       this.api.post("ionic/auth", obj).subscribe((data) => {
 
+        console.log(data);
 
         if(data.token === undefined){
           loader.dismiss();

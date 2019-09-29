@@ -3,12 +3,16 @@ import { IonicPage, NavController, NavParams, LoadingController, AlertController
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { FilePath } from '@ionic-native/file-path';
 import { FileTransfer, FileTransferObject, FileUploadOptions } from '@ionic-native/file-transfer';
+import { ApiService } from "../../services/api.service";
+import { StorageService } from "../../services/storage.service";
+import { AlertService} from "../../services/alert.service";
+import { LoginPage } from "../login/login";
 
 @IonicPage()
 @Component({
   selector: 'page-camera-check-out',
   templateUrl: 'camera-check-out.html',
-  providers: [Camera, FilePath, FileTransfer]
+  providers: [Camera, FilePath, FileTransfer, ApiService, StorageService, AlertService]
 })
 export class CameraCheckOutPage implements OnInit {
 
@@ -21,12 +25,29 @@ export class CameraCheckOutPage implements OnInit {
               public transfer: FileTransfer,
               public load: LoadingController,
               public alert: AlertController,
-              public toast: ToastController) {
+              public toast: ToastController,
+              public api: ApiService,
+              public store: StorageService,
+              public alertService: AlertService) {
   }
 
   ionViewWillLoad(){
     this.type = this.navParams.get("type");
     this.code = this.navParams.get("code");
+  }
+
+  checkForRequestErrors( error, subTitle, title ){
+
+      if(error.status === 401){
+          this.navCtrl.setRoot(LoginPage);
+      }else{
+
+          this.alertService.show(subTitle, () => {
+              this.navCtrl.pop();
+          }, title);
+
+      }
+
   }
 
   ngOnInit(){
@@ -61,95 +82,88 @@ export class CameraCheckOutPage implements OnInit {
           if(obj["auth"] === "true"){
             loader.dismiss();
 
-            /*
-            in: true
-            out: false
-            let obj = {
-                token: "json_web_token",
-                code: 1234,
-                type: true
-            };*/
+            this.store.get("token").then(data => {
+                if(this.type === "0"){
+
+                    let obj = {
+                        token: data,
+                        profileId: this.code,
+                        type: "out"
+                    };
+
+                    this.api.post("ionic/markPresent", obj).subscribe(data => {
+
+                        let toast = this.toast.create({
+                            message: "Outgoing attendance recorded",
+                            duration: 2000
+                        });
+                        toast.present();
+
+                        toast.onDidDismiss(() => {
+                            this.navCtrl.popToRoot();
+                        });
+
+                    }, error =>{
+
+                        loader.dismiss();
+                        this.checkForRequestErrors(error, "Error in marking attendance", "Alert");
+                    });
+
+
+
+                }else{
+
+                    let obj = {
+                        token: data,
+                        profileId: this.code,
+                        type: "in"
+                    };
+
+                    this.api.post("ionic/markPresent", obj).subscribe(data => {
+
+                        let toast = this.toast.create({
+                            message: "Incoming attendance recorded",
+                            duration: 2000
+                        });
+                        toast.present();
+
+                        toast.onDidDismiss(() => {
+                            this.navCtrl.popToRoot();
+                        });
+
+                    }, error =>{
+
+                        loader.dismiss();
+                        this.checkForRequestErrors(error, "Error in marking attendance", "Alert");
+
+                    });
+
+                }
+
+
+            }).catch(error => {
+                console.log(error);
+            });
             
-            if(this.type === "0"){
 
-              this.toast.create({
-                  message: "Outgoing attendance recorded",
-                  duration: 2000
-              }).present();
-
-            }else{
-
-                this.toast.create({
-                    message: "Incoming attendance recorded",
-                    duration: 2000
-                }).present();
-
-            }
 
           }else{
             loader.dismiss();
-            this.alert.create({
-              title: "Face not matched",
-              message: "Try again to verify",
-              buttons: [
-                {
-                  text: "Ok",
-                  role: "cancel",
-                  handler: value => {
-                    this.navCtrl.pop();
-                  }
-                }
-              ]
-            }).present();
+              this.checkForRequestErrors({status: 404}, "Face not matched. Try again!", "Alert");
             
           }
         }).catch(error => {
           loader.dismiss();
-            this.alert.create({
-                title: "Error in file uploading",
-                message: "Try again to verify",
-                buttons: [
-                    {
-                        text: "Ok",
-                        role: "cancel",
-                        handler: value => {
-                            this.navCtrl.pop();
-                        }
-                    }
-                ]
-            }).present();
+
+            this.checkForRequestErrors(error, "Error in file uploading", "Alert");
         });
 
       }).catch(error => {
-          this.alert.create({
-              title: "Error in resolving android path",
-              message: "Try again to verify",
-              buttons: [
-                  {
-                      text: "Ok",
-                      role: "cancel",
-                      handler: value => {
-                          this.navCtrl.pop();
-                      }
-                  }
-              ]
-          }).present();
+          this.checkForRequestErrors(error, "Error in resolving file path", "Alert");
       });
 
-    }, (err) => {
-        this.alert.create({
-            title: "Camera not supported",
-            message: "Try again to verify",
-            buttons: [
-                {
-                    text: "Ok",
-                    role: "cancel",
-                    handler: value => {
-                        this.navCtrl.pop();
-                    }
-                }
-            ]
-        }).present();
+    }, (error) => {
+        this.checkForRequestErrors(error, "Camera not supported", "Alert");
     });
   }
 

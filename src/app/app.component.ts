@@ -30,6 +30,12 @@ export class MyApp {
         permissions.PERMISSION.CAMERA
       ]);
 
+      platform.registerBackButtonAction(() => {
+          if(this.app.getActiveNav().getActive().component.name !== "HomePage"){
+              this.app.getActiveNav().pop();
+          }
+      });
+
       this.store.get("token").then((data) => {
             if(data !== null){
                 this.app.getActiveNav().setRoot(HomePage);
