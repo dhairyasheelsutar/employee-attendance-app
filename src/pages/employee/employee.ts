@@ -1,33 +1,33 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import {Component} from '@angular/core';
+import {IonicPage, NavController, NavParams} from 'ionic-angular';
 
 @IonicPage()
 @Component({
-  selector: 'page-employee',
-  templateUrl: 'employee.html',
+    selector: 'page-employee',
+    templateUrl: 'employee.html',
 })
 export class EmployeePage {
 
     employees = [];
     title = "";
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
-  }
+    constructor(public navCtrl: NavController, public navParams: NavParams) {
+    }
 
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad EmployeePage');
-  }
+    ionViewDidLoad() {
+        console.log('ionViewDidLoad EmployeePage');
+    }
 
-  ionViewWillEnter(){
+    ionViewWillEnter() {
 
-      this.title = this.navParams.get("title");
-      this.employees = this.navParams.get("employees");
+        this.title = this.navParams.get("title");
+        this.employees = this.navParams.get("employees");
 
-  }
+    }
 
-  goBack(){
-    this.navCtrl.pop();
-  }
+    goBack() {
+        this.navCtrl.pop();
+    }
 
 
 }

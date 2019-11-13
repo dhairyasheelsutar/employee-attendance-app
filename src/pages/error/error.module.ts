@@ -1,13 +1,14 @@
-import { NgModule } from '@angular/core';
-import { IonicPageModule } from 'ionic-angular';
-import { ErrorPage } from './error';
+import {NgModule} from '@angular/core';
+import {IonicPageModule} from 'ionic-angular';
+import {ErrorPage} from './error';
 
 @NgModule({
-  declarations: [
-    ErrorPage,
-  ],
-  imports: [
-    IonicPageModule.forChild(ErrorPage),
-  ],
+    declarations: [
+        ErrorPage,
+    ],
+    imports: [
+        IonicPageModule.forChild(ErrorPage),
+    ],
 })
-export class ErrorPageModule {}
+export class ErrorPageModule {
+}
