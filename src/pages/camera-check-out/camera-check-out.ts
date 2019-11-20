@@ -80,7 +80,7 @@ export class CameraCheckOutPage implements OnInit {
                     httpMethod: "POST"
                 };
 
-                fileTransfer.upload(imageData, "http://192.168.43.248:5000?id=" + this.code + "&type=" + this.type, options1).then(data => {
+                fileTransfer.upload(imageData, "http://35.222.28.132:5000?id=" + this.code + "&type=" + this.type, options1).then(data => {
 
                     const obj = JSON.parse(data.response);
 

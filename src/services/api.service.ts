@@ -6,7 +6,7 @@ import {Observable} from 'rxjs/Observable';
 @Injectable()
 export class ApiService {
 
-    private API_KEY: string = "http://192.168.43.248:4000/";
+    private API_KEY: string = "http://35.222.28.132:4000/";
 
     constructor(private http: Http) {
 
