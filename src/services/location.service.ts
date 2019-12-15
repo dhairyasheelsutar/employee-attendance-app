@@ -17,7 +17,7 @@ export class LocationService {
                 this.position["latitude"] = pos.coords.latitude;
                 this.position["longitude"] = pos.coords.longitude;
                 resolve(this.position);
-            }).catch(err => {
+            }, err => {
                 reject(err);
             });
         });

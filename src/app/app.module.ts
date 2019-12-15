@@ -14,6 +14,7 @@ import {CodeInsertPageModule} from '../pages/code-insert/code-insert.module';
 import {CameraCheckOutPageModule} from '../pages/camera-check-out/camera-check-out.module';
 import {ErrorPageModule} from "../pages/error/error.module";
 import {Geolocation} from "@ionic-native/geolocation";
+import {NativeGeocoder} from "@ionic-native/native-geocoder";
 
 @NgModule({
     declarations: [
@@ -41,6 +42,7 @@ import {Geolocation} from "@ionic-native/geolocation";
         StatusBar,
         SplashScreen,
         Geolocation,
+        NativeGeocoder,
         {provide: ErrorHandler, useClass: IonicErrorHandler}
     ]
 })

@@ -1,31 +1,31 @@
 import {Component, OnInit} from '@angular/core';
 import {IonicPage, NavController, NavParams, LoadingController, AlertController, ToastController} from 'ionic-angular';
 import {Camera, CameraOptions} from '@ionic-native/camera';
-import {FilePath} from '@ionic-native/file-path';
-import {FileTransfer, FileTransferObject, FileUploadOptions} from '@ionic-native/file-transfer';
 import {ApiService} from "../../services/api.service";
 import {StorageService} from "../../services/storage.service";
 import {AlertService} from "../../services/alert.service";
 import {LoginPage} from "../login/login";
 import {LocationService} from "../../services/location.service";
+import {HomePage} from "../home/home";
 
 @IonicPage()
 @Component({
     selector: 'page-camera-check-out',
     templateUrl: 'camera-check-out.html',
-    providers: [Camera, FilePath, FileTransfer, ApiService, StorageService, AlertService, LocationService]
+    providers: [Camera, ApiService, StorageService, AlertService, LocationService]
 })
 export class CameraCheckOutPage implements OnInit {
 
     public type = "";
     public code = "";
-    public position = {};
+    public position = {
+        latitude: 0,
+        longitude: 0
+    };
 
     constructor(public navCtrl: NavController,
                 public navParams: NavParams,
                 public camera: Camera,
-                public path: FilePath,
-                public transfer: FileTransfer,
                 public load: LoadingController,
                 public alert: AlertController,
                 public toast: ToastController,
@@ -39,6 +39,7 @@ export class CameraCheckOutPage implements OnInit {
         this.type = this.navParams.get("type");
         this.code = this.navParams.get("code");
         this.location.getLocation().then(pos => this.position = pos);
+        
     }
 
     checkForRequestErrors(error, subTitle, title) {
@@ -48,7 +49,7 @@ export class CameraCheckOutPage implements OnInit {
         } else {
 
             this.alertService.show(subTitle, () => {
-                this.navCtrl.pop();
+                this.navCtrl.setRoot(HomePage);
             }, title);
 
         }
@@ -58,37 +59,31 @@ export class CameraCheckOutPage implements OnInit {
     ngOnInit() {
         const options: CameraOptions = {
             quality: 50,
-            destinationType: this.camera.DestinationType.FILE_URI,
+            destinationType: this.camera.DestinationType.DATA_URL,
             encodingType: this.camera.EncodingType.JPEG,
             mediaType: this.camera.MediaType.PICTURE,
-            cameraDirection: 0
+            cameraDirection: 0,
+            targetWidth: 400,
+            targetHeight: 400
         };
 
         this.camera.getPicture(options).then((imageData) => {
 
-            this.path.resolveNativePath(imageData).then((relativePath) => {
-
-                const loader = this.load.create({content: "Please wait"});
+            const loader = this.load.create({content: "Please wait"});
                 loader.present();
-                let array = relativePath.split("/");
-                const filename = array[array.length - 1];
-                const fileTransfer: FileTransferObject = this.transfer.create();
-                let options1: FileUploadOptions = {
-                    fileKey: 'file',
-                    fileName: filename,
-                    headers: {},
-                    httpMethod: "POST"
-                };
+                
+                let formData = new FormData();
+                formData.append('file', imageData);
+                
+                this.api.postFlask("?id=" + this.code + "&type=" + this.type, formData).subscribe(data => {
 
-                fileTransfer.upload(imageData, "http://35.222.28.132:5000?id=" + this.code + "&type=" + this.type, options1).then(data => {
-
-                    const obj = JSON.parse(data.response);
+                    const obj = data;
 
                     if (obj["auth"] === "true") {
                         loader.dismiss();
 
                         this.store.get("token").then(data => {
-                            if (this.type === "0") {
+                            if (this.type == "0") {
 
                                 let obj = {
                                     token: data,
@@ -96,7 +91,7 @@ export class CameraCheckOutPage implements OnInit {
                                     type: "out",
                                     ...this.position
                                 };
-
+                                    
                                 this.api.post("customer/supervisor/markPresent", obj).subscribe(data => {
 
                                     let toast = this.toast.create({
@@ -116,7 +111,7 @@ export class CameraCheckOutPage implements OnInit {
                                 });
 
 
-                            } else {
+                            } else if(this.type == "1") {
 
                                 let obj = {
                                     token: data,
@@ -157,15 +152,15 @@ export class CameraCheckOutPage implements OnInit {
                         this.checkForRequestErrors({status: 404}, "Face not matched. Try again!", "Alert");
 
                     }
-                }).catch(error => {
-                    loader.dismiss();
 
+                }, error => {
+                    console.log(error);
+                    loader.dismiss();
                     this.checkForRequestErrors(error, "Error in file uploading", "Alert");
+
                 });
 
-            }).catch(error => {
-                this.checkForRequestErrors(error, "Error in resolving file path", "Alert");
-            });
+            
 
         }, (error) => {
             this.checkForRequestErrors(error, "Camera not supported", "Alert");

@@ -6,7 +6,7 @@ import {Observable} from 'rxjs/Observable';
 @Injectable()
 export class ApiService {
 
-    private API_KEY: string = "http://35.222.28.132:4000/";
+    private API_KEY: string = "http://146.148.65.84:4000/";
 
     constructor(private http: Http) {
 
@@ -20,6 +20,12 @@ export class ApiService {
 
     post(route: string, data: any) {
         return this.http.post(this.API_KEY + route, data)
+            .map((response: Response) => response.json())
+            .catch((error: Response) => Observable.throw(error.json()));
+    }
+
+    postFlask(route: string, data: any){
+        return this.http.post("http://146.148.65.84:5000" + route, data)
             .map((response: Response) => response.json())
             .catch((error: Response) => Observable.throw(error.json()));
     }
