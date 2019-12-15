@@ -23,7 +23,7 @@ page-home {
   .square {
     display: block;
     border-radius: 20px;
-    background: #1b1b1b;
+    background: #121212;
     height: 20vh;
     width: 43vw;
   }
@@ -33,5 +33,9 @@ page-home {
     position: absolute;
     bottom: 3vh;
   }
+
+  .button {
+    background-color: #3700b3;
+}
 
 }
